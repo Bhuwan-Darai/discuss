@@ -13,7 +13,17 @@ const createTopicSchema = z.object({
   description: z.string().min(10),
 });
 
-export async function createTopic(formData: FormData) {
+interface CreateTopicFormState {
+  errors: {
+    name?: string[];
+    descrition?: string[];
+  };
+}
+
+export async function createTopic(
+  formState: CreateTopicFormState,
+  formData: FormData
+): Promise<CreateTopicFormState> {
   // TODO: revalidate the homepage after creating a topic
   const result = createTopicSchema.safeParse({
     name: formData.get("name"),
@@ -23,6 +33,11 @@ export async function createTopic(formData: FormData) {
   // because typescrpt want you to look at rsult.success
   if (!result.success) {
     //to get more precise well formatted error message as object
-    console.log(result.error.flatten().fieldErrors);
+    return {
+      errors: result.error.flatten().fieldErrors,
+    };
   }
+  return {
+    errors: {},
+  };
 }
