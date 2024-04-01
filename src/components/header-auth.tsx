@@ -13,20 +13,20 @@ import * as actions from "@/actions/index";
 
 export default function HeaderAuth() {
   //get the current session object
-  const session = useSession();
+  const { data: session, status } = useSession();
   let authContent: React.ReactNode;
   // in client componnet to access user data from  session
-  if (session.status == "loading") {
+  if (status === "loading") {
     authContent = null;
-  } else if (session.data?.user) {
+  } else if (session?.user) {
     authContent = (
       <Popover placement="left">
         <PopoverTrigger>
-          <Avatar src={session.data.user.image || ""} />
+          <Avatar src={session.user.image || ""} />
         </PopoverTrigger>
         <PopoverContent>
           <div className="p-4">
-            <form>
+            <form action={actions.signOut}>
               <Button type="submit">Sign Out</Button>
             </form>
           </div>
